@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{6495FF15-45B1-4EB5-BF4F-6BF37D811342}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>plugin</RootNamespace>
+    <AssemblyName>plugin</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="accoremgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\accoremgd.dll</HintPath>
+    </Reference>
+    <Reference Include="AcCui">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AcCui.dll</HintPath>
+    </Reference>
+    <Reference Include="acdbmgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acdbmgd.dll</HintPath>
+    </Reference>
+    <Reference Include="acdbmgdbrep">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acdbmgdbrep.dll</HintPath>
+    </Reference>
+    <Reference Include="acmgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acmgd.dll</HintPath>
+    </Reference>
+    <Reference Include="AdWindows">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AdWindows.dll</HintPath>
+    </Reference>
+    <Reference Include="AecBaseMgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AecBaseMgd.dll</HintPath>
+    </Reference>
+    <Reference Include="AeccDbMgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccDbMgd.dll</HintPath>
+    </Reference>
+    <Reference Include="AeccUiWindows">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccUiWindows.dll</HintPath>
+    </Reference>
+    <Reference Include="AeccUiWindows.Resources">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccUiWindows.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="Autodesk.AECC.Interop.Survey">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AECC.Interop.Survey.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Autodesk.AECC.Interop.UiSurvey">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AECC.Interop.UiSurvey.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Autodesk.AutoCAD.Interop">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AutoCAD.Interop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Autodesk.Map.Platform">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.Map.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="ManagedMapApi">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\ManagedMapApi.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.MapGuide.Foundation">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.Foundation.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.MapGuide.Geometry">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.Geometry.dll</HintPath>
+    </Reference>
+    <Reference Include="OSGeo.MapGuide.PlatformBase">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.PlatformBase.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Class1.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
