@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "0/p6kCQXX+BAVHRSYf15KpH63Nx9onlH6BRUPRHWFh5+8z9R9Y4YcrWxp47YrCqnwHdSgHka8v2CxokRskTRMA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\artillis.prado\\source\\repos\\testeReadExcel\\testeReadExcel.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\artillis.prado\\.nuget\\packages\\exceldatareader\\3.6.0\\exceldatareader.3.6.0.nupkg.sha512",
+    "C:\\Users\\artillis.prado\\.nuget\\packages\\exceldatareader.dataset\\3.6.0\\exceldatareader.dataset.3.6.0.nupkg.sha512"
+  ],
+  "logs": []
+}
