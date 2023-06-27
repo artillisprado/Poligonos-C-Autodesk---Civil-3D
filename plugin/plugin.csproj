@@ -31,35 +31,51 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="accoremgd">
+    <Reference Include="accoremgd, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\accoremgd.dll</HintPath>
     </Reference>
-    <Reference Include="AcCui">
+    <Reference Include="AcCui, Version=24.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AcCui.dll</HintPath>
     </Reference>
-    <Reference Include="acdbmgd">
+    <Reference Include="acdbmgd, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acdbmgd.dll</HintPath>
     </Reference>
-    <Reference Include="acdbmgdbrep">
+    <Reference Include="acdbmgdbrep, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acdbmgdbrep.dll</HintPath>
     </Reference>
-    <Reference Include="acmgd">
+    <Reference Include="acmgd, Version=24.0.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\acmgd.dll</HintPath>
     </Reference>
-    <Reference Include="AdWindows">
+    <Reference Include="AdWindows, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AdWindows.dll</HintPath>
     </Reference>
-    <Reference Include="AecBaseMgd">
+    <Reference Include="AecBaseMgd, Version=8.3.53.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AecBaseMgd.dll</HintPath>
     </Reference>
-    <Reference Include="AeccDbMgd">
+    <Reference Include="AeccDbMgd, Version=13.3.854.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccDbMgd.dll</HintPath>
     </Reference>
-    <Reference Include="AeccUiWindows">
+    <Reference Include="AeccUiWindows, Version=13.3.854.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccUiWindows.dll</HintPath>
     </Reference>
-    <Reference Include="AeccUiWindows.Resources">
+    <Reference Include="AeccUiWindows.Resources, Version=13.3.854.0, Culture=en-US, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccUiWindows.Resources.dll</HintPath>
+    </Reference>
+    <Reference Include="AecPropDataMgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AecPropDataMgd.dll</HintPath>
+    </Reference>
+    <Reference Include="AecPropertyManagement">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AecPropertyManagement.dll</HintPath>
     </Reference>
     <Reference Include="Autodesk.AECC.Interop.Survey">
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AECC.Interop.Survey.dll</HintPath>
@@ -73,7 +89,8 @@
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AutoCAD.Interop.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="Autodesk.Map.Platform">
+    <Reference Include="Autodesk.Map.Platform, Version=24.0.30.14, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.Map.Platform.dll</HintPath>
     </Reference>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
@@ -82,20 +99,25 @@
     <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
     </Reference>
-    <Reference Include="ManagedMapApi">
+    <Reference Include="ManagedMapApi, Version=24.0.30.14, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\ManagedMapApi.dll</HintPath>
     </Reference>
-    <Reference Include="OSGeo.MapGuide.Foundation">
+    <Reference Include="OSGeo.MapGuide.Foundation, Version=3.4.72.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.Foundation.dll</HintPath>
     </Reference>
-    <Reference Include="OSGeo.MapGuide.Geometry">
+    <Reference Include="OSGeo.MapGuide.Geometry, Version=3.4.72.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.Geometry.dll</HintPath>
     </Reference>
-    <Reference Include="OSGeo.MapGuide.PlatformBase">
+    <Reference Include="OSGeo.MapGuide.PlatformBase, Version=3.4.72.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.PlatformBase.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
@@ -107,10 +129,22 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Class2.cs" />
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

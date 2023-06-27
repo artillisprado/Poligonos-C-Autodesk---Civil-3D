@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -38,6 +39,9 @@ void readExcel()
             // Create a list to hold the data
             List<List<object>> rowData = new List<List<object>>();
 
+            // Create a list to hold the values for the current row
+            List<string> ColumnNames = new List<string>();
+
             int contador = 0;
             // Read the data rows
             while (reader.Read())
@@ -62,37 +66,61 @@ void readExcel()
                     rowData.Add(rowValues);
 
                 }
+                else
+                {
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        // Add the value to the current row list
+                        ColumnNames.Add(reader.GetValue(i).ToString());
+                    }
+                }
                 contador++;
             }
 
             int cont = 0;
+            // lista de dados do excel [[x,y,z][camada,espessura]]
             IList<object> list_data = new List<object>();
+            // nomes de colunas do set property
+            int indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
+            int indice_camada = ColumnNames.FindIndex(x => x == "CAM1");
+            List<string> namseNSPT = ColumnNames.GetRange(indice_nspt, ColumnNames.Count - indice_nspt);
+            namseNSPT.Insert(0, ColumnNames[0]);
+            namseNSPT.Insert(1, ColumnNames[4]);
+            namseNSPT.Insert(2, "CAM");
+            namseNSPT.Insert(3, "ESPESSURA");
 
             foreach (var row in rowData)
             {
+                var lista_nspt = new List<object> { row[0] }; //Código e NA(m)
                 List<object> camada = new List<object>();
                 List<object> list = new List<object> { row[1], row[2], row[3], row[4] };
-                for (int index = 5;index < column_count;index += 2)
+
+                for (int index = indice_camada;index < column_count;index += 2)
                 {
                     if (row[index] == null)
                     {
                         break;
                     } else
                     {
+                        //lista_nspt.AddRange(new List<Object> { row[index], row[index + 1]}); //Camada e Espessura
                         string tipo_areia = row[index].ToString();
                         string espessura = row[index + 1].ToString();
-                        //string[] array_espessura = espessura.Split(" a ");
                         string[] array_espessura = espessura.Split(new string[] { " a " }, StringSplitOptions.None);
-                        array_espessura = array_espessura.Concat(new string[] { tipo_areia }).ToArray();
+                        array_espessura = array_espessura.Concat(new string[] { tipo_areia}).ToArray();
                         camada.Add(array_espessura);
                     }
                 }
-                list_data.Add(new List<object> { list, camada });
+
+                for (int i = indice_nspt; i <= ColumnNames.Count - indice_nspt; i++)
+                {
+                    if (row[i] == null) break;
+                    lista_nspt.Add(row[i]);
+                }
+                list_data.Add(new List<object> { list, camada, lista_nspt });
                 cont++;
             }
 
             // Passando por todas as coordenadas e camadas
-
             for (var indice = 0; indice < rowData.Count; indice++)
             {
                 // ------- Array 1 - XYZ coordenadas --------
@@ -112,7 +140,13 @@ void readExcel()
                     string espessura_fim = (test_layer[1]).Replace(',', '.');
                     double ini_value = Double.Parse(espessura_ini); // Valor 1 de espessura camada
                     double fim_value = Double.Parse(espessura_fim); // Valor 2 de espessura camada
-                    Console.WriteLine($"{ini_value} {fim_value}");
+                    var lista_property_add = new List<object>(((List<object>)((List<object>)list_data[indice])[2]));
+                    lista_property_add.Insert(1, NA.ToString());
+                    lista_property_add.Insert(2, tipo_areia);
+                    lista_property_add.Insert(3, espessura_ini);
+                    lista_property_add.Insert(4, espessura_fim);
+                    lista_property_add.Insert(5, (fim_value - ini_value).ToString());
+
                     if (ini_value > 0)
                     {
                         Z = Z - ini_value; // subtraindo altura para próxima posição de inicio
@@ -121,6 +155,8 @@ void readExcel()
                     {
                         double height = fim_value - ini_value; // espessura
                     }
+
+                    
                 }
             }
         }
