@@ -45,7 +45,7 @@ namespace plugin
         {
             int diametro = Convert.ToInt32(Math.Round(numericUpDown1.Value, 2));
             this.Close();
-            class1.readExcel(filePath, diametro);
+            class1.readExcel(filePath, diametro, textBox2.Text);
 
         }
 
@@ -56,6 +56,9 @@ namespace plugin
         { }
 
         private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+        { }
+
+        private void label3_Click(object sender, EventArgs e)
         { }
     }
 }

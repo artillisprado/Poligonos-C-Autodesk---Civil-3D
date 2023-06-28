@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -12,7 +13,7 @@ using System.Text;
 readExcel();
 void readExcel()
 {
-    var filepath = "C:\\Users\\artillis.prado\\Downloads\\NSPT solido.xlsx";
+    var filepath = "C:\\Users\\artillis.prado\\Downloads\\SONDAGENS__.xlsx";
     System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
     CultureInfo.CurrentCulture = new CultureInfo("en-US");
     using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
@@ -61,7 +62,6 @@ void readExcel()
                         // Add the value to the current row list
                         rowValues.Add(reader.GetValue(i));
                     }
-
                     // Add the row list to the main list of row data
                     rowData.Add(rowValues);
 
@@ -81,7 +81,9 @@ void readExcel()
             // lista de dados do excel [[x,y,z][camada,espessura]]
             IList<object> list_data = new List<object>();
             // nomes de colunas do set property
-            int indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
+            int indice_nspt; // = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
+            if (ColumnNames.FindIndex(x => x == "NSPT_0m-1m") > 0) indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
+            else indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
             int indice_camada = ColumnNames.FindIndex(x => x == "CAM1");
             List<string> namseNSPT = ColumnNames.GetRange(indice_nspt, ColumnNames.Count - indice_nspt);
             namseNSPT.Insert(0, ColumnNames[0]);
@@ -97,7 +99,7 @@ void readExcel()
 
                 for (int index = indice_camada;index < column_count;index += 2)
                 {
-                    if (row[index] == null)
+                    if (row[index] == null || row[index] == "")
                     {
                         break;
                     } else
@@ -113,7 +115,7 @@ void readExcel()
 
                 for (int i = indice_nspt; i <= ColumnNames.Count - indice_nspt; i++)
                 {
-                    if (row[i] == null) break;
+                    if (row[i] == null || row[i] == "") break;
                     lista_nspt.Add(row[i]);
                 }
                 list_data.Add(new List<object> { list, camada, lista_nspt });
@@ -124,18 +126,22 @@ void readExcel()
             for (var indice = 0; indice < rowData.Count; indice++)
             {
                 // ------- Array 1 - XYZ coordenadas --------
-                var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]).ConvertAll(obj => (double)obj); // Lista array 1
-                double N = listaDouble2[0];
-                double E = listaDouble2[1];
-                double Z = listaDouble2[2];
-                double NA = listaDouble2[3];
+                var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]); // Lista array 1
+                if(listaDouble2[0] == "")
+                {
+                    break;
+                }
+                double N = Convert.ToDouble(listaDouble2[0]);
+                double E = Convert.ToDouble(listaDouble2[1]);
+                double Z = Convert.ToDouble(listaDouble2[2]);
+                double NA = Convert.ToDouble(listaDouble2[3]);
 
                 // ------- Array 2 - Camadas --------
                 var qtd_camadas = ((List<object>)((List<object>)list_data[indice])[1]).Count; // Quantidade de Camadas           
                 for (int index = 0; index < qtd_camadas; index++)
                 {
                     var test_layer = ((string[])((List<object>)((List<object>)list_data[indice])[1])[index]); // Lista array 2
-                    string tipo_areia = test_layer[2]; // Tipo de areia
+                    var tipo_areia = test_layer[2]; // Tipo de areia
                     string espessura_ini = (test_layer[0]).Replace(',','.');
                     string espessura_fim = (test_layer[1]).Replace(',', '.');
                     double ini_value = Double.Parse(espessura_ini); // Valor 1 de espessura camada
@@ -155,8 +161,6 @@ void readExcel()
                     {
                         double height = fim_value - ini_value; // espessura
                     }
-
-                    
                 }
             }
         }

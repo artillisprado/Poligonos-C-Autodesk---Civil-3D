@@ -10,6 +10,7 @@ using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.Aec.PropertyData.DatabaseServices;
+using Autodesk.AutoCAD.Colors;
 //using Autodesk.AutoCAD.EditorInput;
 using Autodesk.Aec.ApplicationServices;
 using ExcelDataReader;
@@ -21,6 +22,8 @@ using Autodesk.Aec.DatabaseServices;
 using System.Collections.Specialized;
 using Autodesk.Civil;
 using Autodesk.AutoCAD.Windows;
+using Autodesk.AutoCAD.DatabaseServices.Filters;
+using System.Reflection;
 
 namespace plugin
 {
@@ -152,7 +155,7 @@ namespace plugin
             return result;
         }
 
-        public void CreateCylinder(double N, double E, double Z, double radius, double height, string name, List<string> columnNames, List<Object> lista_property_add)
+        public void CreateCylinder(double N, double E, double Z, double radius, double height, string name, List<string> columnNames, List<Object> lista_property_add, int index)
         {
             // Get the current document and database
             Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -176,6 +179,7 @@ namespace plugin
                 Vector3d extrusionVector = new Vector3d(0, 0, height);
                 Solid3d cylinder = new Solid3d();
                 cylinder.SetDatabaseDefaults();
+                cylinder.Color = Color.FromColorIndex(ColorMethod.ByLayer, (short)index);
                 cylinder.CreateExtrudedSolid(circle, extrusionVector, new SweepOptions());
 
                 // Add the Solid to the model space
@@ -186,6 +190,9 @@ namespace plugin
                 currentSpace.AppendEntity(cylinder);
                 tr.AddNewlyCreatedDBObject(cylinder, true);
 
+                // Remove the circle from the current space
+                circle.Erase();
+
                 // Add propertySet to solid
                 AddStairPropertySetToSolid(cylinder, name);
                 // Add item in propertyset to solid
@@ -195,7 +202,7 @@ namespace plugin
             }
         }
 
-        public void readExcel(string filepath, int diametro)
+        public void readExcel(string filepath, int diametro, string nameSet)
         {
             //var filepath = "C:\\Users\\artillis.prado\\Downloads\\NSPT solido.xlsx";
             CultureInfo.CurrentCulture = new CultureInfo("en-US");
@@ -263,10 +270,13 @@ namespace plugin
                     }
 
                     int cont = 0;
+                    int indice_nspt;
                     // lista de dados do excel [[x,y,z][camada,espessura]]
                     IList<object> list_data = new List<object>();
-                    // nomes de colunas do set property
-                    int indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
+                    
+                    if (ColumnNames.FindIndex(x => x == "NSPT_0m-1m") > 0) indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
+                    else indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
+
                     int indice_camada = ColumnNames.FindIndex(x => x == "CAM1");
                     List<string> nomesNSPT = ColumnNames.GetRange(indice_nspt, ColumnNames.Count - indice_nspt);
                     nomesNSPT.Insert(0, ColumnNames[0]);
@@ -278,8 +288,7 @@ namespace plugin
                     nomesNSPT.Insert(6, "ESPESSURA");
 
                     // Create PropertySet, e add itens in propertySetDefinition
-                    var propertySetName = "SOND";
-                    ChangePropertyName(nomesNSPT, propertySetName);
+                    ChangePropertyName(nomesNSPT, nameSet);
 
                     foreach (var row in rowData)
                     {
@@ -288,7 +297,7 @@ namespace plugin
                         List<object> list = new List<object> { row[1], row[2], row[3], row[4] };
                         for (int index = indice_camada; index < column_count; index += 2)
                         {
-                            if (row[index] == null)
+                            if (row[index] == null || row[index] == "")
                             {
                                 break;
                             }
@@ -303,7 +312,7 @@ namespace plugin
                         }
                         for (int i = indice_nspt; i <= ColumnNames.Count - indice_nspt; i++)
                         {
-                            if (row[i] == null) break;
+                            if (row[i] == null || row[i] == "") break;
                             lista_nspt.Add(row[i]);
                         }
                         list_data.Add(new List<object> { list, camada, lista_nspt });
@@ -315,11 +324,12 @@ namespace plugin
                     for (var indice = 0; indice < rowData.Count; indice++)
                     {
                         // ------- Array 1 - XYZ coordenadas --------
-                        var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]).ConvertAll(obj => (double)obj); // Lista array 1
-                        double N = listaDouble2[0];
-                        double E = listaDouble2[1];
-                        double Z = listaDouble2[2];
-                        double NA = listaDouble2[3];
+                        var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]); // Lista array 1
+                        if (listaDouble2[0] == "" || listaDouble2[0] == null) break; // se o N for igual a vazio, significa que é a última linha
+                        double N = Convert.ToDouble(listaDouble2[0]);
+                        double E = Convert.ToDouble(listaDouble2[1]);
+                        double Z = Convert.ToDouble(listaDouble2[2]);
+                        string NA = Convert.ToString(listaDouble2[3]);
 
                         // ------- Array 2 - Camadas --------
                         var qtd_camadas = ((List<object>)((List<object>)list_data[indice])[1]).Count; // Quantidade de Camadas           
@@ -342,12 +352,12 @@ namespace plugin
 
                             if (ini_value == 0)
                             {
-                                CreateCylinder(E, N, Z, diametro, fim_value * (-1), propertySetName, nomesNSPT, lista_property_add); // chamar função [N,E,Z,NA,height]    
+                                CreateCylinder(E, N, Z, diametro, fim_value * (-1), nameSet, nomesNSPT, lista_property_add, index); // chamar função [N,E,Z,NA,height]    
                             }
                             else
                             {
                                 double height = (fim_value - ini_value) * (-1); // espessura
-                                CreateCylinder(E, N, Z - ini_value, diametro, height, propertySetName, nomesNSPT, lista_property_add); // chamar função
+                                CreateCylinder(E, N, Z - ini_value, diametro, height, nameSet, nomesNSPT, lista_property_add, index); // chamar função
                             }
                         }
                         //break;
