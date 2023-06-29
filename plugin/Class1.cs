@@ -45,7 +45,7 @@ namespace plugin
             propertySetDefinition.IsLocked = false;
             propertySetDefinition.IsVisible = true;
             propertySetDefinition.IsWriteable = true;
-            appliesTo.Add("AcDb3dSolid"); //Info qual o appliesTo a ser usado
+            appliesTo.Add("AcDb3dSolid"); //Info o objeto que no appliesTo vai ser usado
             propertySetDefinition.SetAppliesToFilter(appliesTo, false); //Adicionando no propertySet
 
             PropertyDefinition propertyDefinition; //Tabela propertyDefinition
@@ -68,7 +68,7 @@ namespace plugin
                     return;
                 }
 
-                dictionaryPropertySetDefinitions.AddNewRecord(name, propertySetDefinition);
+                dictionaryPropertySetDefinitions.AddNewRecord(name, propertySetDefinition); // criando dicionário de property set
                 tr.AddNewlyCreatedDBObject(propertySetDefinition, true);
 
                 tr.Commit();
@@ -90,7 +90,7 @@ namespace plugin
                     DictionaryPropertySetDefinitions psdDict = new DictionaryPropertySetDefinitions(db);
                     if (psdDict.Has(psdName, tr))
                     {
-                        psdId = psdDict.GetAt(psdName);
+                        psdId = psdDict.GetAt(psdName); // Retorna um dicionário do set de propriedades
                     }
                 }
                 catch
@@ -107,14 +107,14 @@ namespace plugin
             bool result = false;
             Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
 
-            Autodesk.AutoCAD.DatabaseServices.ObjectId psdId = GetPropertySetDefinitionIdByName(name);
+            Autodesk.AutoCAD.DatabaseServices.ObjectId psdId = GetPropertySetDefinitionIdByName(name); // pegando o id do set de propriedades pelo nome
 
             using (Transaction tr = HostApplicationServices.WorkingDatabase.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    Autodesk.AutoCAD.DatabaseServices.DBObject dbobj = tr.GetObject(sol.Id, OpenMode.ForWrite);
-                    PropertyDataServices.AddPropertySet(dbobj, psdId);
+                    Autodesk.AutoCAD.DatabaseServices.DBObject dbobj = tr.GetObject(sol.Id, OpenMode.ForWrite); // Pegando objecto do cylinder
+                    PropertyDataServices.AddPropertySet(dbobj, psdId); // adicionando o objecto cylinder ao set de propriedades
                     result = true;
                 }
                 catch
@@ -127,7 +127,6 @@ namespace plugin
             }
         }
         // Create cylinder
-
         public static bool SetStairPropertiesToSolid(Solid3d sol, string psdName, List<string> columnNames, List<Object> lista_property_add)
         {
             bool result = false;
@@ -143,7 +142,7 @@ namespace plugin
                         {
                             for (int i = 0; i < lista_property_add.Count; i++)
                             {
-                                pset.SetAt(pset.PropertyNameToId(columnNames[i]), lista_property_add[i].ToString());
+                                pset.SetAt(pset.PropertyNameToId(columnNames[i]), lista_property_add[i].ToString()); // Pegar pelo id do nome do set propriedades, e adicionar o item
                             }
                             result = true;
                             break;
@@ -326,10 +325,10 @@ namespace plugin
                         // ------- Array 1 - XYZ coordenadas --------
                         var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]); // Lista array 1
                         if (listaDouble2[0] == "" || listaDouble2[0] == null) break; // se o N for igual a vazio, significa que é a última linha
-                        double N = Convert.ToDouble(listaDouble2[0]);
-                        double E = Convert.ToDouble(listaDouble2[1]);
+                        double N = Convert.ToDouble(listaDouble2[0]); // X
+                        double E = Convert.ToDouble(listaDouble2[1]); // Y
                         double Z = Convert.ToDouble(listaDouble2[2]);
-                        string NA = Convert.ToString(listaDouble2[3]);
+                        string NA = Convert.ToString(listaDouble2[3]); // Nível da Água
 
                         // ------- Array 2 - Camadas --------
                         var qtd_camadas = ((List<object>)((List<object>)list_data[indice])[1]).Count; // Quantidade de Camadas           
@@ -350,7 +349,7 @@ namespace plugin
                             lista_property_add.Insert(5, Z.ToString());
                             lista_property_add.Insert(6, (fim_value - ini_value).ToString());
 
-                            if (ini_value == 0)
+                            if (ini_value == 0) //subtraindo a espessura inicial - Z
                             {
                                 CreateCylinder(E, N, Z, diametro, fim_value * (-1), nameSet, nomesNSPT, lista_property_add, index); // chamar função [N,E,Z,NA,height]    
                             }
@@ -360,7 +359,6 @@ namespace plugin
                                 CreateCylinder(E, N, Z - ini_value, diametro, height, nameSet, nomesNSPT, lista_property_add, index); // chamar função
                             }
                         }
-                        //break;
                     }
                 }
             }
@@ -369,7 +367,7 @@ namespace plugin
         [CommandMethod("cilindro")]
         public void Form()
         {
-            Form1 form = new Form1();
+            Form1 form = new Form1(); // Iniciar Form 1
             form.ShowDialog();
         }
     }
