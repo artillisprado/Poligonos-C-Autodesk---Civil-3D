@@ -269,15 +269,14 @@ namespace plugin
                     }
 
                     int cont = 0;
-                    int indice_nspt;
                     // lista de dados do excel [[x,y,z][camada,espessura]]
                     IList<object> list_data = new List<object>();
-                    
-                    if (ColumnNames.FindIndex(x => x == "NSPT_0m-1m") > 0) indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
-                    else indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
 
-                    int indice_camada = ColumnNames.FindIndex(x => x == "CAM1");
-                    List<string> nomesNSPT = ColumnNames.GetRange(indice_nspt, ColumnNames.Count - indice_nspt);
+                    int indice_nspt = ColumnNames.FindIndex(x => x.StartsWith("NSPT")); // primeiro nspt
+                    int max_nspt = ColumnNames.FindLastIndex(item => item.StartsWith("NSPT")); // último nspt
+                    int indice_camada = ColumnNames.FindIndex(x => x.StartsWith("CAM"));
+                    int max_camada = ColumnNames.FindLastIndex(item => item.StartsWith("CAM"));
+                    List<string> nomesNSPT = ColumnNames.GetRange(indice_nspt, (max_nspt + 1) - indice_nspt); //ColumnNames.Count - indice_nspt
                     nomesNSPT.Insert(0, ColumnNames[0]);
                     nomesNSPT.Insert(1, ColumnNames[4]);
                     nomesNSPT.Insert(2, "CAM");
@@ -294,7 +293,7 @@ namespace plugin
                         var lista_nspt = new List<object> { row[0] }; //Código e NA(m)
                         List<object> camada = new List<object>();
                         List<object> list = new List<object> { row[1], row[2], row[3], row[4] };
-                        for (int index = indice_camada; index < column_count; index += 2)
+                        for (int index = indice_camada; index < max_camada+1; index += 2)
                         {
                             if (row[index] == null || row[index] == "")
                             {
@@ -309,7 +308,7 @@ namespace plugin
                                 camada.Add(array_espessura);
                             }
                         }
-                        for (int i = indice_nspt; i <= ColumnNames.Count - indice_nspt; i++)
+                        for (int i = indice_nspt; i <= (max_nspt + 1) - indice_nspt; i++)
                         {
                             if (row[i] == null || row[i] == "") break;
                             lista_nspt.Add(row[i]);
@@ -364,7 +363,7 @@ namespace plugin
             }
         }
 
-        [CommandMethod("cilindro")]
+        [CommandMethod("cilindros_de_sondagem")]
         public void Form()
         {
             Form1 form = new Form1(); // Iniciar Form 1

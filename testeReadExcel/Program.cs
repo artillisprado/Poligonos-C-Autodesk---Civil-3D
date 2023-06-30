@@ -1,6 +1,7 @@
 ﻿using ExcelDataReader;
 using Microsoft.VisualBasic;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -81,11 +82,11 @@ void readExcel()
             // lista de dados do excel [[x,y,z][camada,espessura]]
             IList<object> list_data = new List<object>();
             // nomes de colunas do set property
-            int indice_nspt; // = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
-            if (ColumnNames.FindIndex(x => x == "NSPT_0m-1m") > 0) indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_0m-2m");
-            else indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
-            int indice_camada = ColumnNames.FindIndex(x => x == "CAM1");
-            List<string> namseNSPT = ColumnNames.GetRange(indice_nspt, ColumnNames.Count - indice_nspt);
+            int indice_nspt = ColumnNames.FindIndex(x => x.StartsWith("NSPT"));
+            int max_nspt = ColumnNames.FindLastIndex(item => item.StartsWith("NSPT"));
+            int indice_camada = ColumnNames.FindIndex(x => x.StartsWith("CAM"));
+            int max_camada = ColumnNames.FindLastIndex(item => item.StartsWith("CAM"));
+            List<string> namseNSPT = ColumnNames.GetRange(indice_nspt, (max_nspt+1) - indice_nspt);
             namseNSPT.Insert(0, ColumnNames[0]);
             namseNSPT.Insert(1, ColumnNames[4]);
             namseNSPT.Insert(2, "CAM");
@@ -97,7 +98,7 @@ void readExcel()
                 List<object> camada = new List<object>();
                 List<object> list = new List<object> { row[1], row[2], row[3], row[4] };
 
-                for (int index = indice_camada;index < column_count;index += 2)
+                for (int index = indice_camada;index < max_camada+1;index += 2)
                 {
                     if (row[index] == null || row[index] == "")
                     {
@@ -113,7 +114,7 @@ void readExcel()
                     }
                 }
 
-                for (int i = indice_nspt; i <= ColumnNames.Count - indice_nspt; i++)
+                for (int i = indice_nspt; i <= (max_nspt + 1) - indice_nspt; i++)
                 {
                     if (row[i] == null || row[i] == "") break;
                     lista_nspt.Add(row[i]);
