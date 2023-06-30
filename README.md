@@ -1,5 +1,3 @@
-# Poligonos-C-Autodesk---Civil-3D
-
 # Automoção sobre Automoção de Sondagem a Percurssão
 By [Artillis Prado](https://github.com/TilinhoFrond-End)
 
