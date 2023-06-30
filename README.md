@@ -30,7 +30,7 @@ By [Artillis Prado](https://github.com/TilinhoFrond-End)
   - <p>Salvar arquivo em uma pasta "extensões civil 3d"</p>
 
   ### Adicionar dll no Visual Studio
-    └─ Criando um projeto (Novo -> projeto)
+    - Criando um projeto (Novo -> projeto)
       └── Criar novo projeto -> Biblioteca de Classes -> aplicativo de console
-    └──  Gerenciador de Soluções:
+    - Gerenciador de Soluções:
       └── nome_projeto -> Referências -> extensões civil 3d -> Adicione todas as dll
