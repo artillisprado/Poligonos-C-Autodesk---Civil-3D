@@ -1,5 +1,5 @@
 # Automoção sobre Sondagem a Percurssão
-By [Artillis Prado](https://github.com/TilinhoFrond-End)
+By [Artillis Prado](https://github.com/artillisprado)
 
 ## Getting Started / Introdução
 
