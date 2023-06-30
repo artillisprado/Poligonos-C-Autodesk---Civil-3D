@@ -4,8 +4,8 @@ By [Artillis Prado](https://github.com/TilinhoFrond-End)
 ## Getting Started / Introdução
 
 ### Como encontrar dll, para o civil 3D
-  <p>└─ caminho: C:\Program Files\Autodesk\AutoCAD 2023\C3D </p> 
-  <p>└─ Nomes das dll: 
+  - <p>caminho: C:\Program Files\Autodesk\AutoCAD 2023\C3D </p> 
+  - <p>Nomes das dll: 
         accoremgd.dll,
         AcCui.dll,
         acdbmgd.dll,
@@ -27,7 +27,7 @@ By [Artillis Prado](https://github.com/TilinhoFrond-End)
         OSGeo.MapGuide.Foundation.dll,
         OSGeo.MapGuide.Geometry.dll,
         OSGeo.MapGuide.PlatformBase.dll</p>
-  <p>└─ Salvar arquivo em uma pasta "extensões civil 3d"</p>
+  - <p>Salvar arquivo em uma pasta "extensões civil 3d"</p>
 
   ### Adicionar dll no Visual Studio
     └─ Criando um projeto (Novo -> projeto)
