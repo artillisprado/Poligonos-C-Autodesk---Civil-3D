@@ -1,4 +1,4 @@
-# Automoção sobre Automoção de Sondagem a Percurssão
+# Automoção sobre Sondagem a Percurssão
 By [Artillis Prado](https://github.com/TilinhoFrond-End)
 
 ## Getting Started / Introdução
