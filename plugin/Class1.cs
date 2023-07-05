@@ -203,7 +203,6 @@ namespace plugin
 
         public void readExcel(string filepath, int diametro, string nameSet)
         {
-            //var filepath = "C:\\Users\\artillis.prado\\Downloads\\NSPT solido.xlsx";
             CultureInfo.CurrentCulture = new CultureInfo("en-US");
 
             using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
