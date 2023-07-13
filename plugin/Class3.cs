@@ -29,12 +29,10 @@ using Autodesk.AutoCAD.Windows;
 using Autodesk.Windows;
 using System.Windows;
 using Autodesk.AutoCAD.Customization;
-using Autodesk.AutoCAD.Windows.ToolPalette;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace plugin
 {
-    public class Class1
+    public class Class3
     {
         Document acDoc = Application.DocumentManager.MdiActiveDocument; //Autocad Application documento
         Editor ed = Application.DocumentManager.MdiActiveDocument.Editor; // Autocad EditorInput
@@ -389,59 +387,11 @@ namespace plugin
             lateralTab.Title = "TPF Tools";
             ribbon.Tabs.Add(lateralTab);
 
-            List<String> nomes_paineis = new List<String> { "Automoções C#", "Dynamo", "Lisp" };
-
-            Autodesk.Windows.RibbonPanelSource ribSourcePanel; // = new Autodesk.Windows.RibbonPanelSource();
-            RibbonPanel panel; //= new RibbonPanel();
-            foreach (string nome in nomes_paineis)
-            {
-                ribSourcePanel = new Autodesk.Windows.RibbonPanelSource();
-                ribSourcePanel.Title = nome;
-                panel = new RibbonPanel();
-                panel.Source = ribSourcePanel;
-                lateralTab.Panels.Add(panel);
-            }
-            //create the panel source
-            //Autodesk.Windows.RibbonPanelSource ribSourcePanel = new Autodesk.Windows.RibbonPanelSource();
-            //ribSourcePanel.Title = "Automoções C#";
-
-
             // Create a panel for the lateral menu content
-            //RibbonPanel panel = new RibbonPanel();
-            //panel.Source = ribSourcePanel;
-            //lateralTab.Panels.Add(panel);
-
-            
-            /*Autodesk.Windows.RibbonPanelSource ribbonPanelSource = new Autodesk.Windows.RibbonPanelSource();
-            ribbonPanelSource.Title = "Teste";
-            Autodesk.Windows.RibbonPanel ribbonPanel = new Autodesk.Windows.RibbonPanel();
-            ribbonPanel.Source = ribbonPanelSource;
-            lateralTab.Panels.Add(ribbonPanel);
-            Autodesk.Windows.RibbonButton ribBtn = new Autodesk.Windows.RibbonButton();
-            ribBtn.Text = "Net load";
-            ribBtn.CommandParameter = "cilindros_de_sondagem";
-            ribBtn.Orientation = Windows.Controls.Orientation.Vertical;
-            ribBtn.Size = RibbonItemSize.Large;
-            ribBtn.LargeImage = LoadImage("Block.png")
-            ribBtn.ShowImage = true;
-            ribBtn.ShowText = true;
-            //ribbonPanelSource.Items.Add(ribBtn);*/
-
-            /*Autodesk.Windows.RibbonButton ribBtn = new Autodesk.Windows.RibbonButton();
-
-            Autodesk.Windows.RibbonRowPanel rowPanel = new Autodesk.Windows.RibbonRowPanel();
-            rowPanel.Items.Add(ribBtn);
-            rowPanel.Items.Add(new Autodesk.Windows.RibbonRowBreak());
-            rowPanel.Items.Add(ribBtn);
-            rowPanel.Items.Add(new Autodesk.Windows.RibbonRowBreak());
-            rowPanel.Items.Add(ribBtn);
-            rowPanel.Items.Add(new Autodesk.Windows.RibbonRowBreak());
-
-            panel.Source.Items.Add(rowPanel);
-            lateralTab.Panels.Add(panel);*/
-
-
+            RibbonPanel panel = new RibbonPanel();
+            lateralTab.Panels.Add(panel);
 
         }
+
     }
 }

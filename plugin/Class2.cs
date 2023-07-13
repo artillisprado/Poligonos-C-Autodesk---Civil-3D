@@ -10,6 +10,8 @@ using Autodesk.AutoCAD.ApplicationServices;
 using Autodesk.AutoCAD.Runtime;
 using Autodesk.AutoCAD.Geometry;
 using Autodesk.Aec.PropertyData.DatabaseServices;
+using Autodesk.AutoCAD.Colors;
+//using Autodesk.AutoCAD.Windows;
 //using Autodesk.AutoCAD.EditorInput;
 using Autodesk.Aec.ApplicationServices;
 using ExcelDataReader;
@@ -20,9 +22,15 @@ using System.Runtime;
 using Autodesk.Aec.DatabaseServices;
 using System.Collections.Specialized;
 using Autodesk.Civil;
+using Autodesk.AutoCAD.Windows;
+using Autodesk.AutoCAD.DatabaseServices.Filters;
+using System.Reflection;
+using Autodesk.AutoCAD.Windows;
+using Autodesk.Windows;
+using System.Windows;
+using Autodesk.AutoCAD.Customization;
 
-
-/*namespace plugin
+namespace plugin
 {
     public class Class2
     {
@@ -31,6 +39,7 @@ using Autodesk.Civil;
         CivilDocument doc = CivilApplication.ActiveDocument; //Civil Application Document
         Database acCurDb = Application.DocumentManager.MdiActiveDocument.Database; //Autocad Database
 
+        // Create propertySet
         public void ChangePropertyName(List<String> columnNames, string name)
         {
             var propertySetDefinition = new PropertySetDefinition(); // Instanciando classe propertySet
@@ -41,29 +50,19 @@ using Autodesk.Civil;
             propertySetDefinition.IsLocked = false;
             propertySetDefinition.IsVisible = true;
             propertySetDefinition.IsWriteable = true;
-            appliesTo.Add("AcDb3dSolid"); //Info qual o appliesTo a ser usado
+            appliesTo.Add("AcDb3dSolid"); //Info o objeto que no appliesTo vai ser usado
             propertySetDefinition.SetAppliesToFilter(appliesTo, false); //Adicionando no propertySet
 
-            PropertyDefinition propertyDefinition = new PropertyDefinition(); //Tabela propertyDefinition
+            PropertyDefinition propertyDefinition; //Tabela propertyDefinition
             for (int i = 0; i < columnNames.Count; i++)
             {
-                if (i == 0)
-                {
-                    propertyDefinition.SetToStandard(acCurDb);
-                    propertyDefinition.SubSetDatabaseDefaults(acCurDb);
-                    propertyDefinition.Name = columnNames[i]; //Nome
-                    propertyDefinition.DataType = Autodesk.Aec.PropertyData.DataType.Text; //Tipo
-                    propertySetDefinition.Definitions.Add(propertyDefinition);
-                }
-                else
-                {
-                    propertyDefinition = new PropertyDefinition();
-                    propertyDefinition.SetToStandard(acCurDb);
-                    propertyDefinition.SubSetDatabaseDefaults(acCurDb);
-                    propertyDefinition.Name = columnNames[i]; //Nome
-                    propertyDefinition.DataType = Autodesk.Aec.PropertyData.DataType.Text; //Tipo
-                    propertySetDefinition.Definitions.Add(propertyDefinition);
-                }
+                propertyDefinition = new PropertyDefinition();
+                propertyDefinition.SetToStandard(acCurDb);
+                propertyDefinition.SubSetDatabaseDefaults(acCurDb);
+                propertyDefinition.Name = columnNames[i]; //Nome
+                propertyDefinition.DataType = Autodesk.Aec.PropertyData.DataType.Text; //Tipo
+                propertySetDefinition.Definitions.Add(propertyDefinition);
+                propertySetDefinition.SetDisplayOrder(propertyDefinition, i + 1);
             }
 
             using (Transaction tr = acCurDb.TransactionManager.StartTransaction())
@@ -74,14 +73,13 @@ using Autodesk.Civil;
                     return;
                 }
 
-                dictionaryPropertySetDefinitions.AddNewRecord(name, propertySetDefinition);
+                dictionaryPropertySetDefinitions.AddNewRecord(name, propertySetDefinition); // criando dicionário de property set
                 tr.AddNewlyCreatedDBObject(propertySetDefinition, true);
 
                 tr.Commit();
             }
         }
-
-        // Property Set Definitions 
+        // Get propertySet
         public static Autodesk.AutoCAD.DatabaseServices.ObjectId GetPropertySetDefinitionIdByName(string psdName)
         {
             Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
@@ -97,7 +95,7 @@ using Autodesk.Civil;
                     DictionaryPropertySetDefinitions psdDict = new DictionaryPropertySetDefinitions(db);
                     if (psdDict.Has(psdName, tr))
                     {
-                        psdId = psdDict.GetAt(psdName);
+                        psdId = psdDict.GetAt(psdName); // Retorna um dicionário do set de propriedades
                     }
                 }
                 catch
@@ -108,34 +106,60 @@ using Autodesk.Civil;
                 return psdId;
             }
         }
-
-        // Property sets
+        // PropertySet to solid 
         public static bool AddStairPropertySetToSolid(Solid3d sol, string name)
         {
             bool result = false;
             Editor ed = Application.DocumentManager.MdiActiveDocument.Editor;
 
-            Autodesk.AutoCAD.DatabaseServices.ObjectId psdId = GetPropertySetDefinitionIdByName(name);
+            Autodesk.AutoCAD.DatabaseServices.ObjectId psdId = GetPropertySetDefinitionIdByName(name); // pegando o id do set de propriedades pelo nome
 
             using (Transaction tr = HostApplicationServices.WorkingDatabase.TransactionManager.StartTransaction())
             {
                 try
                 {
-                    Autodesk.AutoCAD.DatabaseServices.DBObject dbobj = tr.GetObject(sol.Id, OpenMode.ForWrite);
-                    PropertyDataServices.AddPropertySet(dbobj, psdId);
+                    Autodesk.AutoCAD.DatabaseServices.DBObject dbobj = tr.GetObject(sol.Id, OpenMode.ForWrite); // Pegando objecto do cylinder
+                    PropertyDataServices.AddPropertySet(dbobj, psdId); // adicionando o objecto cylinder ao set de propriedades
                     result = true;
                 }
                 catch
                 {
                     result = false;
-                    ed.WriteMessage("\n AddStairPropertySetToSolid function failed");
+                    ed.WriteMessage($"\n AddStairPropertySetToSolid function failed {psdId}");
                 }
                 tr.Commit();
                 return result;
             }
         }
+        // Create cylinder
+        public static bool SetStairPropertiesToSolid(Solid3d sol, string psdName, List<string> columnNames, List<Object> lista_property_add)
+        {
+            bool result = false;
+            using (Transaction tr = HostApplicationServices.WorkingDatabase.TransactionManager.StartTransaction())
+            {
+                Autodesk.AutoCAD.DatabaseServices.ObjectIdCollection setIds = PropertyDataServices.GetPropertySets(sol);
+                if (setIds.Count > 0)
+                {
+                    foreach (Autodesk.AutoCAD.DatabaseServices.ObjectId id in setIds)
+                    {
+                        PropertySet pset = (PropertySet)id.GetObject(OpenMode.ForWrite);
+                        if (pset.PropertySetDefinitionName == psdName && pset.IsWriteEnabled)
+                        {
+                            for (int i = 0; i < lista_property_add.Count; i++)
+                            {
+                                pset.SetAt(pset.PropertyNameToId(columnNames[i]), lista_property_add[i].ToString()); // Pegar pelo id do nome do set propriedades, e adicionar o item
+                            }
+                            result = true;
+                            break;
+                        }
+                    }
+                }
+                tr.Commit();
+            }
+            return result;
+        }
 
-        public void CreateCylinder(double N, double E, double Z, double radius, double height, string name)
+        public void CreateCylinder(double N, double E, double Z, double radius, double height, string name, List<string> columnNames, List<Object> lista_property_add, int index)
         {
             // Get the current document and database
             Document doc = Application.DocumentManager.MdiActiveDocument;
@@ -159,26 +183,31 @@ using Autodesk.Civil;
                 Vector3d extrusionVector = new Vector3d(0, 0, height);
                 Solid3d cylinder = new Solid3d();
                 cylinder.SetDatabaseDefaults();
+                cylinder.Color = Color.FromColorIndex(ColorMethod.ByLayer, (short)index);
                 cylinder.CreateExtrudedSolid(circle, extrusionVector, new SweepOptions());
 
                 // Add the Solid to the model space
                 BlockTable blockTable = tr.GetObject(db.BlockTableId, OpenMode.ForRead) as BlockTable;
                 BlockTableRecord modelSpace = tr.GetObject(blockTable[BlockTableRecord.ModelSpace], OpenMode.ForWrite) as BlockTableRecord;
 
-                AddStairPropertySetToSolid(cylinder,name);
                 // Add the cylinder to the current space
                 currentSpace.AppendEntity(cylinder);
                 tr.AddNewlyCreatedDBObject(cylinder, true);
 
+                // Remove the circle from the current space
+                circle.Erase();
+
+                // Add propertySet to solid
+                AddStairPropertySetToSolid(cylinder, name);
+                // Add item in propertyset to solid
+                SetStairPropertiesToSolid(cylinder, name, columnNames, lista_property_add);
                 // Commit the transaction
                 tr.Commit();
             }
         }
 
-        [CommandMethod("cilindro")]
-        public void readExcel()
+        public void readExcel(string filepath, int diametro, string nameSet)
         {
-            var filepath = "C:\\Users\\artillis.prado\\Downloads\\NSPT solido.xlsx";
             CultureInfo.CurrentCulture = new CultureInfo("en-US");
 
             using (var stream = File.Open(filepath, FileMode.Open, FileAccess.Read))
@@ -246,25 +275,31 @@ using Autodesk.Civil;
                     int cont = 0;
                     // lista de dados do excel [[x,y,z][camada,espessura]]
                     IList<object> list_data = new List<object>();
-                    // nomes de colunas do set property
-                    int indice_nspt = ColumnNames.FindIndex(x => x == "NSPT_1m-2m");
-                    List<string> nomesNSPT = ColumnNames.GetRange(indice_nspt, 50);
+
+                    int indice_nspt = ColumnNames.FindIndex(x => x.StartsWith("NSPT")); // primeiro nspt
+                    int max_nspt = ColumnNames.FindLastIndex(item => item.StartsWith("NSPT")); // último nspt
+                    int indice_camada = ColumnNames.FindIndex(x => x.StartsWith("CAM"));
+                    int max_camada = ColumnNames.FindLastIndex(item => item.StartsWith("CAM"));
+                    List<string> nomesNSPT = ColumnNames.GetRange(indice_nspt, (max_nspt + 1) - indice_nspt); //ColumnNames.Count - indice_nspt
                     nomesNSPT.Insert(0, ColumnNames[0]);
                     nomesNSPT.Insert(1, ColumnNames[4]);
                     nomesNSPT.Insert(2, "CAM");
-                    nomesNSPT.Insert(3, "ESPESSURA");
+                    nomesNSPT.Insert(3, "Cota inicial");
+                    nomesNSPT.Insert(4, "Cota final");
+                    nomesNSPT.Insert(5, "Cota Terreno");
+                    nomesNSPT.Insert(6, "ESPESSURA");
 
                     // Create PropertySet, e add itens in propertySetDefinition
-                    var propertySetName = "SOND";
-                    ChangePropertyName(nomesNSPT, propertySetName);
+                    ChangePropertyName(nomesNSPT, nameSet);
 
                     foreach (var row in rowData)
                     {
+                        var lista_nspt = new List<object> { row[0] }; //Código e NA(m)
                         List<object> camada = new List<object>();
                         List<object> list = new List<object> { row[1], row[2], row[3], row[4] };
-                        for (int index = 5; index < column_count; index += 2)
+                        for (int index = indice_camada; index < max_camada + 1; index += 2)
                         {
-                            if (row[index] == null)
+                            if (row[index] == null || row[index] == "")
                             {
                                 break;
                             }
@@ -272,13 +307,17 @@ using Autodesk.Civil;
                             {
                                 string tipo_areia = row[index].ToString();
                                 string espessura = row[index + 1].ToString();
-                                //string[] array_espessura = espessura.Split(" a ");
                                 string[] array_espessura = espessura.Split(new string[] { " a " }, StringSplitOptions.None);
                                 array_espessura = array_espessura.Concat(new string[] { tipo_areia }).ToArray();
                                 camada.Add(array_espessura);
                             }
                         }
-                        list_data.Add(new List<object> { list, camada });
+                        for (int i = indice_nspt; i <= (max_nspt + 1) - indice_nspt; i++)
+                        {
+                            if (row[i] == null || row[i] == "") break;
+                            lista_nspt.Add(row[i]);
+                        }
+                        list_data.Add(new List<object> { list, camada, lista_nspt });
                         cont++;
                     }
 
@@ -287,40 +326,72 @@ using Autodesk.Civil;
                     for (var indice = 0; indice < rowData.Count; indice++)
                     {
                         // ------- Array 1 - XYZ coordenadas --------
-                        var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]).ConvertAll(obj => (double)obj); // Lista array 1
-                        double N = listaDouble2[0];
-                        double E = listaDouble2[1];
-                        double Z = listaDouble2[2];
-                        double NA = listaDouble2[3];
+                        var listaDouble2 = ((List<object>)((List<object>)list_data[indice])[0]); // Lista array 1
+                        if (listaDouble2[0] == "" || listaDouble2[0] == null) break; // se o N for igual a vazio, significa que é a última linha
+                        double N = Convert.ToDouble(listaDouble2[0]); // X
+                        double E = Convert.ToDouble(listaDouble2[1]); // Y
+                        double Z = Convert.ToDouble(listaDouble2[2]);
+                        string NA = Convert.ToString(listaDouble2[3]); // Nível da Água
 
                         // ------- Array 2 - Camadas --------
                         var qtd_camadas = ((List<object>)((List<object>)list_data[indice])[1]).Count; // Quantidade de Camadas           
+
                         for (int index = 0; index < qtd_camadas; index++)
                         {
+                            var lista_property_add = new List<object>(((List<object>)((List<object>)list_data[indice])[2]));
+                            lista_property_add.Insert(1, NA.ToString()); //examplo
                             var test_layer = ((string[])((List<object>)((List<object>)list_data[indice])[1])[index]); // Lista array 2
                             string tipo_areia = test_layer[2]; // Tipo de areia
                             string espessura_ini = (test_layer[0]).Replace(',', '.');
                             string espessura_fim = (test_layer[1]).Replace(',', '.');
                             double ini_value = Double.Parse(espessura_ini); // Valor 1 de espessura camada
                             double fim_value = Double.Parse(espessura_fim); // Valor 2 de espessura camada
+                            lista_property_add.Insert(2, tipo_areia);
+                            lista_property_add.Insert(3, espessura_ini);
+                            lista_property_add.Insert(4, espessura_fim);
+                            lista_property_add.Insert(5, Z.ToString());
+                            lista_property_add.Insert(6, (fim_value - ini_value).ToString());
 
-                            if (ini_value == 0)
+                            if (ini_value == 0) //subtraindo a espessura inicial - Z
                             {
-                                //double height = fim_value - ini_value; // espessura
-                                CreateCylinder(E, N, Z, 1, fim_value * (-1), propertySetName); // chamar função [N,E,Z,NA,height]
-
+                                CreateCylinder(E, N, Z, diametro, fim_value * (-1), nameSet, nomesNSPT, lista_property_add, index); // chamar função [N,E,Z,NA,height]    
                             }
                             else
                             {
                                 double height = (fim_value - ini_value) * (-1); // espessura
-                                CreateCylinder(E, N, Z - ini_value, 1, height, propertySetName); // chamar função
+                                CreateCylinder(E, N, Z - ini_value, diametro, height, nameSet, nomesNSPT, lista_property_add, index); // chamar função
                             }
                         }
-
                     }
                 }
             }
         }
 
+        [CommandMethod("cilindros_de_sondagem")]
+        public void Form()
+        {
+            Form1 form = new Form1(); // Iniciar Form 1
+            form.ShowDialog();
+        }
+
+        private static Autodesk.Windows.RibbonControl ribbon;
+        private static RibbonTab lateralTab;
+
+        [CommandMethod("Menu_teste")]
+        public void Initialize()
+        {
+            ribbon = ComponentManager.Ribbon;
+
+            // Create the lateral menu tab
+            lateralTab = new RibbonTab();
+            lateralTab.Title = "TPF Tools";
+            ribbon.Tabs.Add(lateralTab);
+
+            // Create a panel for the lateral menu content
+            RibbonPanel panel = new RibbonPanel();
+            lateralTab.Panels.Add(panel);
+
+        }
+
     }
-}*/
+}

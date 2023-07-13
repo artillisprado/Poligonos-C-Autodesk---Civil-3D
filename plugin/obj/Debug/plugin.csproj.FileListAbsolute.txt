@@ -30,3 +30,4 @@ C:\Users\artillis.prado\source\repos\plugin\bin\Debug\AecPropDataMgd.dll
 C:\Users\artillis.prado\source\repos\plugin\bin\Debug\AecPropertyManagement.dll
 C:\Users\artillis.prado\source\repos\plugin\obj\Debug\plugin.Form1.resources
 C:\Users\artillis.prado\source\repos\plugin\obj\Debug\plugin.csproj.GenerateResource.cache
+C:\Users\artillis.prado\source\repos\plugin\bin\Debug\AeccPressurePipesMgd.dll

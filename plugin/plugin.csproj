@@ -63,6 +63,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccDbMgd.dll</HintPath>
     </Reference>
+    <Reference Include="AeccPressurePipesMgd">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccPressurePipesMgd.dll</HintPath>
+    </Reference>
     <Reference Include="AeccUiWindows, Version=13.3.854.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\AeccUiWindows.dll</HintPath>
@@ -87,6 +90,10 @@
     </Reference>
     <Reference Include="Autodesk.AutoCAD.Interop">
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AutoCAD.Interop.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Autodesk.AutoCAD.Interop.Common">
+      <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\Autodesk.AutoCAD.Interop.Common.dll</HintPath>
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="Autodesk.Map.Platform, Version=24.0.30.14, Culture=neutral, processorArchitecture=MSIL">
@@ -129,6 +136,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Class1.cs" />
+    <Compile Include="Class3.cs" />
     <Compile Include="Class2.cs" />
     <Compile Include="Form1.cs">
       <SubType>Form</SubType>
