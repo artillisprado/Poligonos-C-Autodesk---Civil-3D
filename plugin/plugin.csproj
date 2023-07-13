@@ -122,6 +122,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\OneDrive - tpfe.com.br\Área de Trabalho\extensões civil 3d\OSGeo.MapGuide.PlatformBase.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -153,6 +155,9 @@
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="path_to_icon_1.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

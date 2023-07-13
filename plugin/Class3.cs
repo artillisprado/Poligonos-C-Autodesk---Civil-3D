@@ -1,7 +1,7 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 using Autodesk.Civil.ApplicationServices;
 using Autodesk.AutoCAD.EditorInput;
@@ -13,22 +13,11 @@ using Autodesk.Aec.PropertyData.DatabaseServices;
 using Autodesk.AutoCAD.Colors;
 //using Autodesk.AutoCAD.Windows;
 //using Autodesk.AutoCAD.EditorInput;
-using Autodesk.Aec.ApplicationServices;
 using ExcelDataReader;
 using System.IO;
 using System.Globalization;
-using System.Runtime.Remoting.Lifetime;
-using System.Runtime;
-using Autodesk.Aec.DatabaseServices;
 using System.Collections.Specialized;
-using Autodesk.Civil;
-using Autodesk.AutoCAD.Windows;
-using Autodesk.AutoCAD.DatabaseServices.Filters;
-using System.Reflection;
-using Autodesk.AutoCAD.Windows;
 using Autodesk.Windows;
-using System.Windows;
-using Autodesk.AutoCAD.Customization;
 
 namespace plugin
 {
@@ -395,3 +384,4 @@ namespace plugin
 
     }
 }
+*/
