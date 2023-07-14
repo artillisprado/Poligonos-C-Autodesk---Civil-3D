@@ -29,6 +29,9 @@ using Autodesk.AutoCAD.Windows;
 using Autodesk.Windows;
 using Autodesk.AutoCAD.Customization;
 using Autodesk.AutoCAD.Windows.ToolPalette;
+using System.Windows.Media.Imaging;
+
+[assembly: CommandClass(typeof(plugin.Class1))]
 
 namespace plugin
 {
@@ -378,43 +381,70 @@ namespace plugin
         private static RibbonTab lateralTab;
 
         [CommandMethod("Menu_teste")]
-        public void Initialize()
+        public void Menu_TPF_Tools()
         {
+            // Get the current CUI context
+            Document doc = Application.DocumentManager.MdiActiveDocument;
+
             ribbon = ComponentManager.Ribbon;
 
             // Create the lateral menu tab
             lateralTab = new RibbonTab();
             lateralTab.Title = "TPF Tools";
+
+
+
+            List<String> nomes_paineis = new List<String> { "Funcoes", "Rotinas Dynamo e Lisp", "Relatorios" };
+
+            lateralTab.Panels.Add(SetupMenuButton(nomes_paineis[0], "Sondagem a Percussao", "file excel + diâmetro + nome de set de propriedades"));
+            lateralTab.Panels.Add(SetupMenuButton(nomes_paineis[1]));
+            lateralTab.Panels.Add(SetupMenuButton(nomes_paineis[2]));
+
             ribbon.Tabs.Add(lateralTab);
 
-            List<String> nomes_paineis = new List<String> { "Automoções C#", "Dynamo", "Lisp" };
+            ribbon.UpdateLayout();
+            //ribbon.SaveState();
 
-            Autodesk.Windows.RibbonPanelSource ribSourcePanel; // = new Autodesk.Windows.RibbonPanelSource();
-            RibbonPanel panel; //= new RibbonPanel();
-            foreach (string nome in nomes_paineis)
-            {
-                ribSourcePanel = new Autodesk.Windows.RibbonPanelSource();
-                ribSourcePanel.Title = nome;
-                panel = new RibbonPanel();
-                panel.Source = ribSourcePanel;
-                lateralTab.Panels.Add(panel);
-                var ribBtn = SetupMenuButton();
-                ribSourcePanel.Items.Add(ribBtn);
-            }
+            // Show a message
+            Editor editor = doc.Editor;
+            editor.WriteMessage("RibbonButton created successfully!");
 
         }
 
-        private static Autodesk.Windows.RibbonButton SetupMenuButton()
+        private static RibbonPanel SetupMenuButton(string name_sessao ,string name_button = "", string description = "")
         {
-            Autodesk.Windows.RibbonButton ribBtn = new Autodesk.Windows.RibbonButton();
-            ribBtn.Text = "Net load";
-            ribBtn.CommandParameter = "cilindros_de_sondagem";
-            ribBtn.Orientation = System.Windows.Controls.Orientation.Vertical;
-            ribBtn.Size = RibbonItemSize.Large;
-            ribBtn.LargeImage = LoadImage();
-            ribBtn.ShowImage = true;
-            ribBtn.ShowText = true;
-            return ribBtn;
+            //BitmapImage smallImage = new BitmapImage(new Uri(@"path_to_icon_1.png"));
+            //BitmapImage largeImage = new BitmapImage(new Uri(@"path_to_icon_2.png"));
+
+            Autodesk.Windows.RibbonPanelSource ribSourcePanel; // = new Autodesk.Windows.RibbonPanelSource();
+            RibbonPanel panel; //= new RibbonPanel();
+            ribSourcePanel = new Autodesk.Windows.RibbonPanelSource();
+            panel = new RibbonPanel();
+            panel.Source = ribSourcePanel;
+            ribSourcePanel.Title = name_sessao;
+
+            if (name_button != "") {            
+                Autodesk.Windows.RibbonButton ribBtn = new Autodesk.Windows.RibbonButton();
+                ribBtn.Name = name_button;
+                ribBtn.Text = name_button;
+                ribBtn.Description = description;
+                ribBtn.CommandParameter = "";
+                ribBtn.Orientation = System.Windows.Controls.Orientation.Vertical;
+                ribBtn.Size = RibbonItemSize.Large;
+                //ribBtn.LargeImage = largeImage;
+                //ribBtn.Image = smallImage;
+                ribBtn.ShowImage = true;
+                ribBtn.ShowText = true;
+                ribBtn.CommandHandler = new YourButtonCommandHandler();
+                ribSourcePanel.Items.Add(ribBtn);
+
+                // Generate a unique ID for the menu
+                string menuId = Guid.NewGuid().ToString();
+
+                // Set the CommandParameter to the menu ID
+                ribBtn.CommandParameter = menuId;
+            }
+            return panel;
         }
 
         public static System.Windows.Media.ImageSource LoadImage()
@@ -422,5 +452,23 @@ namespace plugin
             //"Block.png"
             return new System.Windows.Media.Imaging.BitmapImage(new Uri(@"path_to_icon_1.png", UriKind.Relative));
         }
+
+
+    }
+
+    public class YourButtonCommandHandler : System.Windows.Input.ICommand
+    {
+        public bool CanExecute(object parameter)
+        {
+            return true;
+        }
+
+        public void Execute(object parameter)
+        {
+            Class1 class1 = new Class1();
+            class1.Form();
+        }
+
+        public event System.EventHandler CanExecuteChanged;
     }
 }
